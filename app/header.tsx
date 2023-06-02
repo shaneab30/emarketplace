@@ -15,6 +15,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { firebaseApp, getUserData } from "./firebase";
+import Link from "next/link";
 
 interface HeaderProps {
 
@@ -33,7 +36,8 @@ const Header: FunctionComponent<HeaderProps> = () => {
         setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
+        // setAnchorElUser(event.currentTarget);
+        signOut(getAuth(firebaseApp));
     };
 
     const handleCloseNavMenu = () => {
@@ -43,6 +47,18 @@ const Header: FunctionComponent<HeaderProps> = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const [userauth, setuserauth] = useState(null as User | null);
+    const [userdata, setuserdata] = useState(null as UserData | null);
+
+    onAuthStateChanged(getAuth(firebaseApp), async (user) => {
+        setuserauth(user);
+        if (user) {
+            // const userData: UserData | null = await getUserData(userauth!);
+            // console.log(userData);
+            setuserdata(await getUserData(userauth!));
+        }
+    });
 
     return (
         <AppBar position="static">
@@ -135,11 +151,19 @@ const Header: FunctionComponent<HeaderProps> = () => {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                            </IconButton>
-                        </Tooltip>
+                        {
+                            userauth ? <Tooltip title="Open settings">
+                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                    <Avatar alt={userdata?.name.toUpperCase()} src="/static/images/avatar/2.jpg" />
+                                </IconButton>
+                            </Tooltip>
+                                :
+                                <Link href="/login">
+                                    <Button color="error" variant="contained" sx={{ p: 0 }}>
+                                        Login
+                                    </Button>
+                                </Link>
+                        }
                         <Menu
                             sx={{ mt: '45px' }}
                             id="menu-appbar"

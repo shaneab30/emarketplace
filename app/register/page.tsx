@@ -5,9 +5,10 @@ import { Button, Checkbox, FormControlLabel, Grid, TextField } from "@mui/materi
 import { FunctionComponent, useState } from "react";
 
 import styles from './page.module.css'
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { firebaseApp } from "../firebase";
-
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import Link from "next/link";
 
 interface RegisterProps {
 
@@ -34,6 +35,8 @@ const Register: FunctionComponent<RegisterProps> = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, miscdata.email, miscdata.password);
             console.log('created user:', userCredential.user);
             // store data ke firestore
+            const firestore = getFirestore(firebaseApp);
+            await setDoc(doc(firestore, "users", userCredential.user.uid), formdata);
         } else {
             alert('Password tidak sama');
         }
@@ -54,7 +57,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
                             <FormControlLabel required control={<Checkbox />} label="Saya setuju dengan semua aturan dari web ini." />
                             <div className={styles.containerButtons}>
                                 <Button variant="contained" type="submit">Daftar</Button>
-                                <Button >Login</Button>
+                                <Link href = "/login"><Button >Login</Button></Link>
                             </div>
                         </div>
                     </form>
