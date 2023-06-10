@@ -20,13 +20,19 @@ const AddProduct: FunctionComponent<AddProductProps> = () => {
 
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const firestore = getFirestore(firebaseApp);
-        // Add a new document with a generated id.
-        const docRef = await addDoc(collection(firestore, "products"), {
-            formdata
-        });
-        console.log("Document written with ID: ", docRef.id);
-
+        const localUserData = localStorage.getItem("userData");
+        if (localUserData) {
+            const userData: UserData = JSON.parse(localUserData);
+            
+            const firestore = getFirestore(firebaseApp);
+            // Add a new document with a generated id.
+            const docRef = await addDoc(collection(firestore, "products"), {
+                ...formdata, owner: userData.uid,
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } else {
+            console.log('Need to login before add product');
+        }
     }
 
     return (

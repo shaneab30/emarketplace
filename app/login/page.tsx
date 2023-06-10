@@ -39,7 +39,7 @@ const Login: FunctionComponent<LoginProps> = () => {
                             <TextField name="email" label="Email" fullWidth type="email" required value={miscdata.email} onChange={(e) => setmiscdata({ ...miscdata, email: e.target.value })} />
                             <TextField name="password" label="Sandi" fullWidth type="password" required value={miscdata.password} onChange={(e) => setmiscdata({ ...miscdata, password: e.target.value })} />
                             <div className={styles.containerButtons}>
-                                <Button variant="contained" type="submit">Login</Button>
+                                <Link href = "/index"><Button variant="contained" type="submit">Login</Button></Link>
                                 <Link href = "/register"><Button >Daftar</Button></Link>
                             </div>
                         </div>

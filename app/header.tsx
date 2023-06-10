@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -36,8 +36,8 @@ const Header: FunctionComponent<HeaderProps> = () => {
         setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        // setAnchorElUser(event.currentTarget);
-        signOut(getAuth(firebaseApp));
+        setAnchorElUser(event.currentTarget);
+        // signOut(getAuth(firebaseApp));
     };
 
     const handleCloseNavMenu = () => {
@@ -51,14 +51,17 @@ const Header: FunctionComponent<HeaderProps> = () => {
     const [userauth, setuserauth] = useState(null as User | null);
     const [userdata, setuserdata] = useState(null as UserData | null);
 
-    onAuthStateChanged(getAuth(firebaseApp), async (user) => {
-        setuserauth(user);
-        if (user) {
-            // const userData: UserData | null = await getUserData(userauth!);
-            // console.log(userData);
-            setuserdata(await getUserData(userauth!));
-        }
-    });
+    useEffect(() => {
+        onAuthStateChanged(getAuth(firebaseApp), async (user) => {
+            setuserauth(user);
+            if (user) {
+                // const userData: UserData | null = await getUserData(userauth!);
+                // console.log(userData);
+                const newUserData = await getUserData(user)
+                setuserdata(newUserData);
+            }
+        });
+    }, []);
 
     return (
         <AppBar position="static">
@@ -154,7 +157,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                         {
                             userauth ? <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt={userdata?.name.toUpperCase()} src="/static/images/avatar/2.jpg" />
+                                    <Avatar alt={userdata?.name.toUpperCase()} />
                                 </IconButton>
                             </Tooltip>
                                 :

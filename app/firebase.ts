@@ -32,8 +32,12 @@ onAuthStateChanged(getAuth(firebaseApp), async (user) => {
   if (user) {
     // User is signed in, see docs for a list of available properties
     // https://firebase.google.com/docs/reference/js/firebase.User
-    const uid = user.uid;
-    const email = user.email;
+    // const uid = user.uid;
+    // const email = user.email;
+    const userData = await getUserData(user);
+    localStorage.setItem("userdata", JSON.stringify(userData));
+  } else {
+    localStorage.removeItem("userdata");
   }
 });
 
@@ -50,7 +54,7 @@ export const getUserData = async (user: User) => {
       email: user.email!,
       ...docSnap.data()
     }
-    // localStorage.setItem("userdata", JSON.stringify(userData));
+    localStorage.setItem("userdata", JSON.stringify(userData));
   } else {
     console.log("No such document!");
   }
