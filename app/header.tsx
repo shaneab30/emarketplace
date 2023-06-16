@@ -18,6 +18,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { firebaseApp, getUserData } from "./firebase";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
 
 interface HeaderProps {
 
@@ -48,20 +49,22 @@ const Header: FunctionComponent<HeaderProps> = () => {
         setAnchorElUser(null);
     };
 
-    const [userauth, setuserauth] = useState(null as User | null);
-    const [userdata, setuserdata] = useState(null as UserData | null);
+    const currentUser = useAppSelector(state => state.user.currentUser);
 
-    useEffect(() => {
-        onAuthStateChanged(getAuth(firebaseApp), async (user) => {
-            setuserauth(user);
-            if (user) {
-                // const userData: UserData | null = await getUserData(userauth!);
-                // console.log(userData);
-                const newUserData = await getUserData(user)
-                setuserdata(newUserData);
-            }
-        });
-    }, []);
+    // const [userauth, setuserauth] = useState(null as User | null);
+    // const [userdata, setuserdata] = useState(null as UserData | null);
+
+    // useEffect(() => {
+    //     onAuthStateChanged(getAuth(firebaseApp), async (user) => {
+    //         setuserauth(user);
+    //         if (user) {
+    //             // const userData: UserData | null = await getUserData(userauth!);
+    //             // console.log(userData);
+    //             const newUserData = await getUserData(user)
+    //             setuserdata(newUserData);
+    //         }
+    //     });
+    // }, []);
 
     return (
         <AppBar position="static">
@@ -155,9 +158,9 @@ const Header: FunctionComponent<HeaderProps> = () => {
 
                     <Box sx={{ flexGrow: 0 }}>
                         {
-                            userauth ? <Tooltip title="Open settings">
+                            currentUser ? <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt={userdata?.name.toUpperCase()} />
+                                    <Avatar alt={currentUser.name.toUpperCase()} src="/static/images/avatar/1.jpg"/>
                                 </IconButton>
                             </Tooltip>
                                 :

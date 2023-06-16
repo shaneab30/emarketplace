@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { user } from "./features/userSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    user: user.reducer,
+  },
   devTools: process.env.NODE_ENV !== "production",
 });
 
