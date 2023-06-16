@@ -1,3 +1,5 @@
+import { login, logout } from "@/redux/features/userSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { initializeApp } from "firebase/app";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
@@ -22,7 +24,7 @@ const firebaseConfig = {
 // Initialize Firebase
 export const firebaseApp = initializeApp(firebaseConfig);
 // const firebaseAnalytics = getAnalytics(app);
-
+const dispatch = useAppDispatch();
 
 
 // https://firebase.google.com/docs/auth/web/manage-users
@@ -35,9 +37,11 @@ onAuthStateChanged(getAuth(firebaseApp), async (user) => {
     // const uid = user.uid;
     // const email = user.email;
     const userData = await getUserData(user);
-    localStorage.setItem("userdata", JSON.stringify(userData));
+    // localStorage.setItem("userdata", JSON.stringify(userData));
+    dispatch(login(userData!));
   } else {
-    localStorage.removeItem("userdata");
+    // localStorage.removeItem("userdata");
+    dispatch(logout());
   }
 });
 
@@ -54,7 +58,8 @@ export const getUserData = async (user: User) => {
       email: user.email!,
       ...docSnap.data()
     }
-    localStorage.setItem("userdata", JSON.stringify(userData));
+    // dispatch(login(userData!));
+    // localStorage.setItem("userdata", JSON.stringify(userData));
   } else {
     console.log("No such document!");
   }
