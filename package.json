@@ -25,5 +25,8 @@
     "react-number-format": "^5.2.2",
     "react-redux": "^8.0.7",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/react-image-gallery": "^1.2.0"
   }
 }

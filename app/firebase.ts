@@ -55,7 +55,9 @@ export const getUserData = async (user: User) => {
     userData = {
       uid: user.uid,
       email: user.email!,
-      ...docSnap.data()
+      name: docSnap.data().name,
+      storename: docSnap.data().storename,
+      // ...docSnap.data()
     }
     // dispatch(login(userData!));
     // localStorage.setItem("userdata", JSON.stringify(userData));

@@ -25,7 +25,7 @@ interface HeaderProps {
 
 }
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Home', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
