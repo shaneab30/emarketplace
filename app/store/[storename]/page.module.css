@@ -1,0 +1,18 @@
+.productBorder{
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    transition: box-shadow .5s;
+}
+
+.product:hover .productBorder{
+    box-shadow: 0 0 20px rgba(0, 0, 0, .5);
+}
+
+.productName{
+    padding: 5px;
+}
+
+.price{
+    padding: 5px;
+    font-weight: bold;
+}

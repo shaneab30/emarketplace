@@ -21,6 +21,8 @@
     "next": "13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-image-gallery": "^1.2.12",
+    "react-number-format": "^5.2.2",
     "react-redux": "^8.0.7",
     "typescript": "5.0.4"
   }
