@@ -120,7 +120,7 @@ const AddProduct: FunctionComponent<AddProductProps> = () => {
                     </div>
 
                     <div className={styles.containerButtons}>
-                        <Button variant="contained" type="submit">Submit</Button>
+                        <Button variant="contained" type="submit" onClick={(e) => { alert("Sudah Terkirim") }}>Submit</Button>
                     </div>
                 </div>
             </form>

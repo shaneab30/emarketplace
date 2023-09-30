@@ -34,12 +34,53 @@ const pages = ['Home', 'Add Product'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
+const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+    },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    '& .MuiInputBase-input': {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: '20ch',
+        },
+    },
+}));
+
 const Header: FunctionComponent<HeaderProps> = () => {
 
     const router = useRouter();
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const [query, setquery] = useState("");
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -84,46 +125,6 @@ const Header: FunctionComponent<HeaderProps> = () => {
                 break;
         }
     }
-
-    const Search = styled('div')(({ theme }) => ({
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.common.white, 0.25),
-        },
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
-            width: 'auto',
-        },
-    }));
-
-    const SearchIconWrapper = styled('div')(({ theme }) => ({
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }));
-
-    const StyledInputBase = styled(InputBase)(({ theme }) => ({
-        color: 'inherit',
-        '& .MuiInputBase-input': {
-            padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
-            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('md')]: {
-                width: '20ch',
-            },
-        },
-    }));
 
     const currentUser = useAppSelector(state => state.user.currentUser);
 
@@ -186,6 +187,18 @@ const Header: FunctionComponent<HeaderProps> = () => {
                                 <StyledInputBase
                                     placeholder="Search…"
                                     inputProps={{ 'aria-label': 'search' }}
+                                    onChange={(e) => {
+                                        alert('changing ' + e);
+                                        console.log('changing ' + e);
+                                    }}
+                                    onKeyDown={(e) => {
+                                        console.log('searching');
+                                        alert('searching');
+
+                                        if (e.key === 'Enter') {
+                                            console.log('do validate');
+                                        }
+                                    }}
                                 />
                             </Search>
                             {pages.map((page) => (
@@ -234,6 +247,15 @@ const Header: FunctionComponent<HeaderProps> = () => {
                             <StyledInputBase
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onChange={(e) => {
+                                    setquery(e.target.value);
+                                }}
+                                value={query}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        router.push(`/search/${query}`);
+                                    }
+                                }}
                             />
                         </Search>
                     </Box>
