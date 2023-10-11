@@ -28,3 +28,13 @@ export interface ProductDataWithImageAndStorename {
     imagePath: string;
     storename: string;
 }
+
+export interface ProductDataWithSearch {
+    id: string;
+    owner: string;
+    deskripsi: string;
+    harga: string;
+    nameProduct: string;
+    imagePath: string;
+    storename: string;
+}
