@@ -1,7 +1,7 @@
 'use client';
 
 
-import { Button, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, FormControlLabel, Grid, Snackbar, TextField } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 
 import styles from './page.module.css'
@@ -34,6 +34,19 @@ const Login: FunctionComponent<LoginProps> = () => {
         console.log('logged in user:', userCredential.user);
         router.push('/');
     }
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    }
+
+    const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    }
+
 
     return (
         <div style={{ padding: 20 }}>
@@ -45,7 +58,12 @@ const Login: FunctionComponent<LoginProps> = () => {
                             <TextField name="email" label="Email" fullWidth type="email" required value={miscdata.email} onChange={(e) => setmiscdata({ ...miscdata, email: e.target.value })} />
                             <TextField name="password" label="Sandi" fullWidth type="password" required value={miscdata.password} onChange={(e) => setmiscdata({ ...miscdata, password: e.target.value })} />
                             <div className={styles.containerButtons}>
-                                <Button variant="contained" type="submit">Login</Button>
+                                <Button variant="contained" type="submit" onClick={handleClick}>Login</Button>
+                                <Snackbar open={open} autoHideDuration={100000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="success" sx={{ width: '500px' }}>
+                                    Success!
+                                </Alert>
+                                </Snackbar>
                                 <Link href = "/register"><Button >Daftar</Button></Link>
                             </div>
                         </div>

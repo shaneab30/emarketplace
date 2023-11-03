@@ -4,7 +4,7 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
 import { ProductDataWithSearch } from "@/models/interfaces";
 import { collection, query, where, getDocs, getFirestore, and, or, orderBy, startAt, endAt, documentId, getDoc, doc } from "firebase/firestore";
-import { Grid, Link } from "@mui/material";
+import { CircularProgress, Grid, Link } from "@mui/material";
 import styles from './page.module.css';
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
@@ -122,7 +122,7 @@ const SearchPage: FunctionComponent<SearchPageProps> = ({ params }) => {
                     </Grid>
                 </div>
                 :
-                <div>Loading</div>
+                <div className={styles.center}><CircularProgress/></div>
         }
     </>);
 }

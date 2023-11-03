@@ -8,7 +8,7 @@ import { collection, getDocs, getFirestore, query, where } from "firebase/firest
 import { doc, getDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, listAll, ref } from "firebase/storage";
 import { ImageGalleryContent, ProductDataWithImage, ProductDataWithImageAndStorename, StoreData } from "@/models/interfaces";
-import { Avatar, Button, Grid } from "@mui/material";
+import { Avatar, Button, CircularProgress, Grid } from "@mui/material";
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -105,7 +105,7 @@ const index: FunctionComponent<indexProps> = ({ }) => {
             </Grid>
           </div>
           :
-          <div>Loading</div>
+          <div className={styles.center}><CircularProgress /></div>
       }
 
 

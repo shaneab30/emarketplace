@@ -1,7 +1,7 @@
 'use client';
 
 import { NumberFormatValues, NumericFormat, NumericFormatProps } from 'react-number-format';
-import { Button, TextField } from "@mui/material";
+import { Alert, Button, IconButton, Snackbar, TextField } from "@mui/material";
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from "react";
 import styles from './page.module.css'
 import { addDoc, collection, doc, getFirestore, setDoc } from "firebase/firestore";
@@ -9,6 +9,8 @@ import { firebaseApp } from "@/app/firebase";
 import { getAuth } from "firebase/auth";
 import { useAppSelector } from "@/redux/hooks";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 interface AddProductProps {
 
@@ -46,7 +48,7 @@ const AddProduct: FunctionComponent<AddProductProps> = () => {
             let imageNumber = 0;
             images!.forEach(async image => {
                 const storageRef = ref(storage, `product/${currentUser.storename}/${title}/${imageNumber}`);
-                
+
                 imageNumber++;
 
                 const snapshot = await uploadBytes(storageRef, image);
@@ -93,38 +95,57 @@ const AddProduct: FunctionComponent<AddProductProps> = () => {
     //     }
     // );
 
-    return (
-        <div style={{ padding: 20 }}>
-            <div className={styles.title}>Add Produk ke Store</div>
-            <form onSubmit={(e) => { submit(e); }}>
-                <div className={styles.container}>
-                    <TextField fullWidth name="nameProduct" label="Nama produk" variant="outlined" value={formdata.nameProduct} onChange={(e) => setformdata({ ...formdata, nameProduct: e.target.value })} />
-                    <TextField
-                        label="Harga Produk"
-                        value={formdata.harga}
-                        onChange={(e) => setformdata({ ...formdata, harga: e.target.value })}
-                        name="numberformat"
-                        id="formatted-numberformat-input"
-                        // InputProps={{
-                        //     inputComponent: NumericFormatCustom as any,
-                        // }}
-                        variant="outlined"
-                    />
-                    {/* <TextField fullWidth name="harga" type="number" label="Harga produk" variant="outlined" value={formdata.harga} onChange={(e) => setformdata({ ...formdata, harga: e.target.value })} /> */}
-                    <TextField multiline rows={4} fullWidth name="deskripsi" label="Deskripsi produk" variant="outlined" value={formdata.deskripsi} onChange={(e) => setformdata({ ...formdata, deskripsi: e.target.value })} />
-                    <input type="file" accept="image/*" multiple onChange={(e) => { handleFileSelector(e.target.files) }} />
-                    <div>
-                        {images && images.length > 0 && images.map((image) => (
-                            <img src={URL.createObjectURL(image)} key={image.name} style={{ width: 100, height: 100, objectFit: 'cover', display: 'inline-block', marginRight: 10 }} />
-                        ))}
-                    </div>
+        const [open, setOpen] = React.useState(false);
 
-                    <div className={styles.containerButtons}>
-                        <Button variant="contained" type="submit" onClick={(e) => { alert("Sudah Terkirim") }}>Submit</Button>
-                    </div>
-                </div>
-            </form>
-        </div>);
-}
+        const handleClick = () => {
+            setOpen(true);
+        };
 
-export default AddProduct;
+        const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+            if (reason === 'clickaway') {
+                return;
+            }
+
+            setOpen(false);
+        };
+
+        return (
+            <div style={{ padding: 20 }}>
+                <div className={styles.title}>Add Produk ke Store</div>
+                <form onSubmit={(e) => { submit(e); }}>
+                    <div className={styles.container}>
+                        <TextField fullWidth name="nameProduct" label="Nama produk" variant="outlined" value={formdata.nameProduct} onChange={(e) => setformdata({ ...formdata, nameProduct: e.target.value })} />
+                        <TextField
+                            label="Harga Produk"
+                            value={formdata.harga}
+                            onChange={(e) => setformdata({ ...formdata, harga: e.target.value })}
+                            name="numberformat"
+                            id="formatted-numberformat-input"
+                            // InputProps={{
+                            //     inputComponent: NumericFormatCustom as any,
+                            // }}
+                            variant="outlined"
+                        />
+                        {/* <TextField fullWidth name="harga" type="number" label="Harga produk" variant="outlined" value={formdata.harga} onChange={(e) => setformdata({ ...formdata, harga: e.target.value })} /> */}
+                        <TextField multiline rows={4} fullWidth name="deskripsi" label="Deskripsi produk" variant="outlined" value={formdata.deskripsi} onChange={(e) => setformdata({ ...formdata, deskripsi: e.target.value })} />
+                        <input type="file" accept="image/*" multiple onChange={(e) => { handleFileSelector(e.target.files) }} />
+                        <div>
+                            {images && images.length > 0 && images.map((image) => (
+                                <img src={URL.createObjectURL(image)} key={image.name} style={{ width: 100, height: 100, objectFit: 'cover', display: 'inline-block', marginRight: 10 }} />
+                            ))}
+                        </div>
+
+                        <div className={styles.containerButtons}>
+                            <Button variant="contained" type="submit" onClick= {handleClick}>Submit</Button>
+                            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                                    Success!
+                                </Alert>
+                            </Snackbar>
+                        </div>
+                    </div>
+                </form>
+            </div>);
+    }
+
+    export default AddProduct;
