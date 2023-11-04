@@ -119,6 +119,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
                 break;
             case 'Logout':
                 signOut(getAuth(firebaseApp));
+                handleCloseUserMenu();
                 break;
             default:
                 console.log(`Handler function for ${key} not found`);
