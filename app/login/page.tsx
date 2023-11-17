@@ -10,6 +10,7 @@ import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } f
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FirebaseError } from "firebase/app";
 
 interface LoginProps {
 
@@ -30,15 +31,22 @@ const Login: FunctionComponent<LoginProps> = () => {
 
         // Login firebase
         const auth = getAuth(firebaseApp);
-        const userCredential = await signInWithEmailAndPassword(auth, miscdata.email, miscdata.password);
-        console.log('logged in user:', userCredential.user);
-        router.push('/');
+        setOpen(true);
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, miscdata.email, miscdata.password);
+            // console.log(userCredential);
+            // console.log('logged in user:', userCredential.user);
+            router.push('/');
+        } catch (e) {
+            console.error(e);
+            if (e instanceof FirebaseError && (e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found')) {
+                setOpen(true);
+            }
+        }
+
     }
     const [open, setOpen] = useState(false);
-
-    const handleClick = () => {
-        setOpen(true);
-    }
 
     const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -46,6 +54,7 @@ const Login: FunctionComponent<LoginProps> = () => {
         }
         setOpen(false);
     }
+
 
 
     return (
@@ -58,13 +67,18 @@ const Login: FunctionComponent<LoginProps> = () => {
                             <TextField name="email" label="Email" fullWidth type="email" required value={miscdata.email} onChange={(e) => setmiscdata({ ...miscdata, email: e.target.value })} />
                             <TextField name="password" label="Sandi" fullWidth type="password" required value={miscdata.password} onChange={(e) => setmiscdata({ ...miscdata, password: e.target.value })} />
                             <div className={styles.containerButtons}>
-                                <Button variant="contained" type="submit" onClick={handleClick}>Login</Button>
+                                <Button variant="contained" type="submit">Login</Button>
                                 <Snackbar open={open} autoHideDuration={100000} onClose={handleClose}>
-                                <Alert onClose={handleClose} severity="success" sx={{ width: '500px' }}>
-                                    Success!
-                                </Alert>
+                                    <Alert onClose={handleClose} severity="error" sx={{ width: '500px' }}>
+                                        Wrong Email or Password!
+                                    </Alert>
                                 </Snackbar>
-                                <Link href = "/register"><Button >Daftar</Button></Link>
+                                {/* <Snackbar open={open} autoHideDuration={100000} onClose={handleClose}>
+                                    <Alert onClose={handleClose} severity="success" sx={{ width: '500px' }}>
+                                        Success!
+                                    </Alert>
+                                </Snackbar> */}
+                                <Link href="/register"><Button >Daftar</Button></Link>
                             </div>
                         </div>
                     </form>
