@@ -3,7 +3,6 @@
 
 import { Alert, Button, Checkbox, FormControlLabel, Grid, Snackbar, TextField } from "@mui/material";
 import { FunctionComponent, useState } from "react";
-
 import styles from './page.module.css'
 import { firebaseApp } from "../firebase";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -25,28 +24,33 @@ const Login: FunctionComponent<LoginProps> = () => {
         email: '',
         password: '',
     });
-
+    
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // Login firebase
         const auth = getAuth(firebaseApp);
-        setOpen(true);
-
+        // setOpen1(true);
+        
         try {
             const userCredential = await signInWithEmailAndPassword(auth, miscdata.email, miscdata.password);
             // console.log(userCredential);
             // console.log('logged in user:', userCredential.user);
+            setOpen1(true)
             router.push('/');
+            // setOpen1(true)
+        
         } catch (e) {
             console.error(e);
             if (e instanceof FirebaseError && (e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found')) {
-                setOpen(true);
+                setOpen(true); // Show error message
+            
             }
         }
 
     }
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
 
     const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -73,11 +77,12 @@ const Login: FunctionComponent<LoginProps> = () => {
                                         Wrong Email or Password!
                                     </Alert>
                                 </Snackbar>
-                                {/* <Snackbar open={open} autoHideDuration={100000} onClose={handleClose}>
+
+                                <Snackbar open={open1} autoHideDuration={100000} onClose={handleClose}>
                                     <Alert onClose={handleClose} severity="success" sx={{ width: '500px' }}>
                                         Success!
                                     </Alert>
-                                </Snackbar> */}
+                                </Snackbar>
                                 <Link href="/register"><Button >Daftar</Button></Link>
                             </div>
                         </div>
