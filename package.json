@@ -10,6 +10,7 @@
     "android": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor/core": "^5.7.0",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
@@ -28,6 +29,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@capacitor/cli": "^5.7.0",
     "@types/react-image-gallery": "^1.2.0"
   }
 }
